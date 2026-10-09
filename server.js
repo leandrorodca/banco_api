@@ -36,7 +36,6 @@ app.get('/teste-db', (req, res) => {
 // 2 - LOGIN SIMPLES (só por CPF)
 app.post('/login', (req, res) => {
   const { cpf,senha } = req.body;
-  
   db.query('SELECT * FROM contas WHERE cpf =?', [cpf], async(err, rows) => {
     if (rows.length === 0)return res.status(404).json({msg: "Conta não encontrada"});            
     
@@ -44,10 +43,11 @@ app.post('/login', (req, res) => {
     
     const senhaCorreta = await bcrypt.compare(senha, cliente.senha_hash);
 
-    if (!senhaCorreta) return res.status(401).json({ erro: "CPF ou Senha inválidas" });
+    if (!senhaCorreta) return res.status(401).json({ erro: "CPF ou Senha inválidos" });
 
     res.json({ msg: "Login ok", cliente: { id: cliente.id, nome: cliente.nome } });
   });
+ 
 });
 
 // Criando uma conta
