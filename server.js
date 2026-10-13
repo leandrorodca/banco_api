@@ -75,5 +75,17 @@ app.get('/v1/saldo/:cpf', (req, res) => {
     res.json(rows[0]);
   });
 });
+// 4 - TRANSFERIR
+app.post('/v1/transferir', (req, res) => {
+  const { origem_id, destino_id, valor } = req.body;
+  db.query('UPDATE contas SET saldo = saldo -? WHERE cpf =?', [valor, origem_id], () => {
+    db.query('UPDATE contas SET saldo = saldo +? WHERE cpf =?', [valor, destino_id], () => {
+      db.query('INSERT INTO transacoes (origem_id, destino_id, tipo, valor) VALUES (?,?, "transferencia",?)',
+      [origem_id, destino_id, valor]);
+      res.json({msg: "Transferência realizada com sucesso"});
+    });
+  });
+  //res.json({debito:origem_id,credito:destino_id,valor})
+});
 
 app.listen(3000, () => console.log("Rodando na porta 3000"));
