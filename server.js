@@ -71,5 +71,13 @@ console.log(cpf, nome, email,senha, chave_pix)
     res.status(500).json({ erro: e.message });
   }
 });
+// 3 - CONSULTAR SALDO
+app.get('/conta/saldo/:cpf', (req, res) => {
+  const {cpf} = req.params
+  db.query('SELECT saldo FROM contas WHERE cpf =?', [cpf], (err, rows) => {
+    
+    res.json(rows[0]);
+  });
+});
 
 app.listen(3000, () => console.log("Rodando na porta 3000"));
