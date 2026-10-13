@@ -7,16 +7,12 @@ const app = express();
 app.use(cors()); 
 app.use(express.json());
 
-// app.post('/conta', (req, res) => {
-//   const { cpf, nome } = req.body;
-//   res.json({cpf,nome});
-// });
-app.get('/teste', (req, res) => {
-  res.json({msg:"sucesso nosso banco está funcionando..."});
+app.get('/v1/teste', (req, res) => {
+  res.json({msg:"Banco funcionando..."});
 });
 
-// ENDPOINT DE TESTE DE BANCO
-app.get('/teste-db', (req, res) => {
+// ENDPOINT DE TESTE DE BASE DE DADOS
+app.get('/v1/teste-db', (req, res) => {
   db.query('SELECT 1 + 1 AS teste', (err, rows) => {
     if (err) {
       console.log(err);
@@ -34,7 +30,7 @@ app.get('/teste-db', (req, res) => {
 });
 
 // 2 - LOGIN SIMPLES (só por CPF)
-app.post('/login', (req, res) => {
+app.post('/v1/login', (req, res) => {
   const { cpf,senha } = req.body;
   db.query('SELECT * FROM contas WHERE cpf =?', [cpf], async(err, rows) => {
     if (rows.length === 0)return res.status(404).json({msg: "Conta não encontrada"});            
@@ -51,7 +47,7 @@ app.post('/login', (req, res) => {
 });
 
 // Criando uma conta
-app.post('/conta', async (req, res) => {
+app.post('/v1/conta', async (req, res) => {
   const { cpf, nome,email,chave_pix, senha } = req.body;
 console.log(cpf, nome, email,senha, chave_pix)
   try {
@@ -72,10 +68,10 @@ console.log(cpf, nome, email,senha, chave_pix)
   }
 });
 // 3 - CONSULTAR SALDO
-app.get('/conta/saldo/:cpf', (req, res) => {
+app.get('/v1/saldo/:cpf', (req, res) => {
   const {cpf} = req.params
-  db.query('SELECT saldo FROM contas WHERE cpf =?', [cpf], (err, rows) => {
-    
+  db.query('SELECT nome ,saldo FROM contas WHERE cpf =?', [cpf], (err, rows) => {
+   
     res.json(rows[0]);
   });
 });
