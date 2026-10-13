@@ -45,7 +45,7 @@ app.post('/login', (req, res) => {
 
     if (!senhaCorreta) return res.status(401).json({ erro: "CPF ou Senha inválidos" });
 
-    res.json({ msg: "Login ok", cliente: { id: cliente.id, nome: cliente.nome } });
+    res.json({ msg: true, cliente: { id: cliente.id, nome: cliente.nome } });
   });
  
 });
@@ -53,7 +53,7 @@ app.post('/login', (req, res) => {
 // Criando uma conta
 app.post('/conta', async (req, res) => {
   const { cpf, nome,email,chave_pix, senha } = req.body;
-
+console.log(cpf, nome, email,senha, chave_pix)
   try {
     // 1. cria o hash (10 é o padrão)
     const senha_hash = await bcrypt.hash(senha, 10);
